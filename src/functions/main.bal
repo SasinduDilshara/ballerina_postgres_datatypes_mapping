@@ -345,8 +345,8 @@ public function functionCreation(jdbc:Client jdbcClient){
 
 string numProcName = "numerictest";
 map<string> values = {
-    "smallIntInValue": "smallint","out smallIntOutValue":"bigint"
-    ,"IntInValue":"integer","out intOutValue":"bigint"
+    "smallIntInValue": "smallint","out smallIntOutValue":"smallint"
+    ,"IntInValue":"integer","out intOutValue":"int"
     ,"bigIntInValue":"bigint","out bigintOutValue":"bigint"
     ,"decimalVal":"decimal","out decimalinOut":"decimal"
     ,"numericVal":"numeric","out numericinOut":"numeric"

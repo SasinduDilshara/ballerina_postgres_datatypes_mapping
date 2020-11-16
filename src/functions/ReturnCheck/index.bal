@@ -60,32 +60,12 @@ public type ReturnCheckRecord record{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 public function ReturnCheckFunction(jdbc:Client jdbcClient){
 
         string funcName = "returnCheck";
         string checkValue = "returnValue";
 
-        string checkType = "numeric";
+        string checkType = "serial";
 
         // sql:SmallIntValue returnCheckType = new(1);
         // sql:IntegerValue returnCheckType = new(2);

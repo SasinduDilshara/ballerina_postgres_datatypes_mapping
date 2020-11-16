@@ -315,7 +315,7 @@ public function functionCalls(jdbc:Client jdbcClient){
 
     _ = numericFunctionCall(jdbcClient,
     
-    lowerSmallInt,lowerInt,upperInt,decVal1,numVal1,realVal1,dpVal1
+    lowerSmallInt,lowerInt,"(1,2]",decVal1,numVal1,realVal1,dpVal1
     );
 
 }
@@ -345,9 +345,9 @@ public function functionCreation(jdbc:Client jdbcClient){
 
 string numProcName = "numerictest";
 map<string> values = {
-    "smallIntInValue": "smallint","out smallIntOutValue":"smallint"
+    "smallIntInValue": "smallint","inout smallIntOutValue":"smallint"
     ,"IntInValue":"integer","out intOutValue":"int"
-    ,"bigIntInValue":"bigint","out bigintOutValue":"bigint"
+    ,"bigIntInValue":"int4range","out bigintOutValue":"int4range"
     ,"decimalVal":"decimal","out decimalinOut":"decimal"
     ,"numericVal":"numeric","out numericinOut":"numeric"
     ,"realVal":"real","out realinOut":"real"
@@ -395,7 +395,7 @@ public type numericFuncRecord record{
 
     int smallIntOutValue;
     int intOutValue;
-    int bigintOutValue;
+    string bigintOutValue;
     decimal decimalinOut;
     decimal numericinOut;
     float realinOut;
@@ -409,7 +409,7 @@ public type numericFuncRecord record{
 function numericFunctionCall(jdbc:Client jdbcClient,
     sql:SmallIntValue inSmallInput,       
     sql:IntegerValue Inputint,             
-    int Inputbigint,           
+    string Inputbigint,           
     sql:DecimalValue inDecimal,            
     sql:NumericValue inNumericVal,         
     sql:RealValue inReal,                  
@@ -444,6 +444,8 @@ function numericFunctionCall(jdbc:Client jdbcClient,
 
     sql:ProcedureCallResult|sql:Error result;
 
+    // sql:InOutParameter smallInOut = new(inSmallInput);
+
     sql:SmallIntOutParameter outSmallInputId = new ;
     sql:IntegerOutParameter outIntId = new ;
     sql:BigIntOutParameter outbigIntId = new ;
@@ -456,8 +458,9 @@ function numericFunctionCall(jdbc:Client jdbcClient,
     sql:ParameterizedQuery callQuery =
             `select * from numerictest(
                 ${inSmallInput},
+                ${inSmallInput},
                 ${Inputint},
-                ${Inputbigint},
+                ${Inputbigint}::int4range,
                 ${inDecimal},
                 ${inNumericVal},
                 ${inReal},

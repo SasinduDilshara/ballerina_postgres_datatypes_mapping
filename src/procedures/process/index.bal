@@ -127,6 +127,7 @@ sql:TimestampValue timeStamptzValue = new("1997-12-17 15:37:16.00");
 // sql:TimestampValue timeStamptzValue = new("2004-10-19 10:23:54+02");
 sql:DateValue dateValue = new("1997-12-17");
 sql:TimeValue timeValue = new("04:05:06");
+sql:TimeValue timeValue2 = new("04:05:06");
 // string inter = "4 years";
 int inter = 4;
 sql:BooleanValue booleanVaue = new(true);
@@ -200,6 +201,7 @@ function proceduresCalls(jdbc:Client jdbcClient)  returns sql:ProcedureCallResul
         ,timeStamptzValue,timeStamptzValue
         ,dateValue,dateValue
         ,timeValue,timeValue
+        ,timeValue2,timeValue2
         // ,inter,inter
     );
     // result = booleanProcedureCall(jdbcClient,

@@ -1698,6 +1698,7 @@ map<string> dtValues = {
     ,"tstzInValue": "timestamptz","inout tstzInOutValue":"timestamptz"
     ,"dInValue": "date","inout dInOutValue":"date"
     ,"tInValue": "time","inout tInOutValue":"time"
+    ,"ttzInValue": "timetz","inout ttzInOutValue":"timetz"
     // ,"iInValue": "interval","inout iInOutValue":"interval"
 };
 string datetimeProcParameters = createParas(dtValues);
@@ -1714,6 +1715,7 @@ function createDatetimeProcedures(jdbc:Client jdbcClient) returns sql:ExecutionR
         +"select tstzInValue into tstzInOutValue;"
         +"select dInValue into dInOutValue;"
         +"select tInValue into tInOutValue;"
+        +"select ttzInValue into ttzInOutValue;"
         // +"select iInValue into iInOutValue;"
         
     );
@@ -1741,6 +1743,7 @@ function datetimeProcedureCall(jdbc:Client jdbcClient,
     ,sql:TimestampValue tstzInput,     sql:TimestampValue tstzInOut
     ,sql:DateValue dInput,             sql:DateValue dInOut
     ,sql:TimeValue tInput,             sql:TimeValue tInOut
+    ,sql:TimeValue ttzInput,             sql:TimeValue ttzInOut
     // ,int iIn,                       int iInOut
     )  returns sql:ProcedureCallResult|sql:Error {
 
@@ -1759,6 +1762,7 @@ function datetimeProcedureCall(jdbc:Client jdbcClient,
     sql:InOutParameter tstzInOutId = new (tstzInOut);
     sql:InOutParameter dInOutId = new (dInOut);
     sql:InOutParameter tInOutId = new (tInOut);
+    sql:InOutParameter ttzInOutId = new (ttzInOut);
     // sql:InOutParameter iInOutId = new (iInOut);
     
     sql:ParameterizedCallQuery callQuery =
@@ -1770,7 +1774,9 @@ function datetimeProcedureCall(jdbc:Client jdbcClient,
                 ${dInput},
                 ${dInOutId},
                 ${tInput},
-                ${tInOutId}            
+                ${tInOutId},
+                ${ttzInput},
+                ${ttzInOutId}             
             )`;
     
 
@@ -1783,6 +1789,7 @@ function datetimeProcedureCall(jdbc:Client jdbcClient,
         io:println("TSTZ value"," - ",tstzInOutId.get(string));
         io:println("D value"," - ",dInOutId.get(string));
         io:println("T value"," - ",tInOutId.get(string));
+        io:println("Tz value"," - ",ttzInOutId.get(string));
         io:println("Binary procedure successfully created");
         io:println("\n");
     } 

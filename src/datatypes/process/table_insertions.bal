@@ -289,10 +289,11 @@ function DateTimeTableInsertions(jdbc:Client jdbcClient) returns sql:ExecutionRe
     sql:TimestampValue timeStamptzValue = new("2004-10-19 10:23:54");
     sql:DateValue dateValue = new("1997-12-17");
     sql:TimeValue timeValue = new("04:05:06");
+    sql:TimeValue timeWithTimeZoneType = new("04:05:06");
 
     result = insertDateTimeTable(jdbcClient,
     
-    timeStampValue,timeStamptzValue,dateValue,timeValue,"4 Year"
+    timeStampValue,timeStamptzValue,dateValue,timeValue,timeWithTimeZoneType,"4 Year"
 
     );
     // result = insertDateTimeTable(jdbcClient,
@@ -304,7 +305,7 @@ function DateTimeTableInsertions(jdbc:Client jdbcClient) returns sql:ExecutionRe
 
 }
 
-function insertDateTimeTable(jdbc:Client jdbcClient , sql:TimestampValue timestampType, sql:TimestampValue timestamptzType, sql:DateValue dateType, sql:TimeValue timeType, string|int intervalType) returns sql:ExecutionResult|sql:Error?{
+function insertDateTimeTable(jdbc:Client jdbcClient , sql:TimestampValue timestampType, sql:TimestampValue timestamptzType, sql:DateValue dateType, sql:TimeValue timeType,sql:TimeValue|string timeWithTimeZoneType, string|int intervalType) returns sql:ExecutionResult|sql:Error?{
     //         "timestampType":"timestamp",
     // "timestamptzType":"timestamptz",
     //         "dateType":"date",
@@ -312,13 +313,14 @@ function insertDateTimeTable(jdbc:Client jdbcClient , sql:TimestampValue timesta
     //         "intervalType":"interval"
    sql:ParameterizedQuery insertQuery =
             `INSERT INTO dateTimeTypes (
-                timestampType, timestamptzType, dateType, timeType, intervalType
+                timestampType, timestamptzType, dateType, timeType,timeWithTimeZoneType, intervalType
                              ) 
              VALUES (
                 ${timestampType} 
                 ,${timestamptzType}
                 , ${dateType}
                 , ${timeType}
+                ,${timeWithTimeZoneType}
                 , ${intervalType} :: interval
             )`;
     

@@ -112,7 +112,7 @@ function createDateTimeTable(jdbc:Client jdbcClient) returns int|string|sql:Erro
             "timestamptzType":"timestamptz",
             "dateType":"date",
             "timeType":"time",
-            // "timeWithTimeZoneType":"timestamp with time zone",
+            "timeWithTimeZoneType":"timetz",
             "intervalType":"interval"
         },"ID");
 

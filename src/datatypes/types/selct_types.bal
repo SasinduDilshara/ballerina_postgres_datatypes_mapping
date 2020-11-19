@@ -77,6 +77,7 @@ public type DateTimeRecord record{
     string timestamptzType;
     string dateType;
     string timeType;
+    string timeWithTimeZoneType;
     string intervalType;
 
 };

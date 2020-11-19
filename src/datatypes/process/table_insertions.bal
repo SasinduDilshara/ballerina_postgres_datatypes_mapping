@@ -286,7 +286,7 @@ function DateTimeTableInsertions(jdbc:Client jdbcClient) returns sql:ExecutionRe
 
     // );
     sql:TimestampValue timeStampValue = new("1997-12-17 15:37:16.00");
-    sql:TimestampValue timeStamptzValue = new("1997-12-17 15:37:16.00");
+    sql:TimestampValue timeStamptzValue = new("2004-10-19 10:23:54");
     sql:DateValue dateValue = new("1997-12-17");
     sql:TimeValue timeValue = new("04:05:06");
 
@@ -349,31 +349,31 @@ function booleanTimeTableInsertions(jdbc:Client jdbcClient) returns sql:Executio
     booleanVaue
 
     );
-    result = insertBooleanTimeTable(jdbcClient,
+    // result = insertBooleanTimeTable(jdbcClient,
     
-    "true"
+    // "true"
 
-    );
-    result = insertBooleanTimeTable(jdbcClient,
+    // );
+    // result = insertBooleanTimeTable(jdbcClient,
     
-        true
+    //     true
 
-    );
-    result = insertBooleanTimeTable(jdbcClient,
+    // );
+    // result = insertBooleanTimeTable(jdbcClient,
     
-        "yes"
+    //     "yes"
 
-    );
-    result = insertBooleanTimeTable(jdbcClient,
+    // );
+    // result = insertBooleanTimeTable(jdbcClient,
     
-        "on"
+    //     "on"
 
-    );
-    result = insertBooleanTimeTable(jdbcClient,
+    // );
+    // result = insertBooleanTimeTable(jdbcClient,
     
-        "1"
+    //     "1"
 
-    );
+    // );
     // result = insertBooleanTimeTable(jdbcClient,
     
     //     0
@@ -390,7 +390,7 @@ function insertBooleanTimeTable(jdbc:Client jdbcClient ,boolean|string|sql:Boole
                 booleanType
                              ) 
              VALUES (
-                ${booleanType} :: boolean
+                ${booleanType}
             )`;
     
 

@@ -5,8 +5,6 @@ import ballerina/java.jdbc;
 import ballerina/sql;
 // import ballerina/time;
 
-
-
 function setUp(jdbc:Client jdbcClient) returns sql:Error|sql:ExecutionResult{
 
     sql:ExecutionResult|sql:Error result; 
@@ -89,14 +87,6 @@ function setUp(jdbc:Client jdbcClient) returns sql:Error|sql:ExecutionResult{
 
 }
 
-
-
-
-
-
-
-
-
 function dropQuery(string name, string parameters) returns string{
 
     string query = "DROP function "+
@@ -109,7 +99,6 @@ function dropQuery(string name, string parameters) returns string{
     return query;
 
 }
-
 
 function createQuery(string name, string parameters,string logic) returns string{
 

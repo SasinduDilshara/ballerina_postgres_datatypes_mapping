@@ -124,6 +124,7 @@ sql:BinaryValue byteVal2 = new(byteVal4);
 
 sql:TimestampValue timeStampValue = new("1997-12-17 15:37:16.00");
 sql:TimestampValue timeStamptzValue = new("1997-12-17 15:37:16.00");
+// sql:TimestampValue timeStamptzValue = new("2004-10-19 10:23:54+02");
 sql:DateValue dateValue = new("1997-12-17");
 sql:TimeValue timeValue = new("04:05:06");
 // string inter = "4 years";
@@ -194,13 +195,13 @@ function proceduresCalls(jdbc:Client jdbcClient)  returns sql:ProcedureCallResul
     // result = binaryProcedureCall(jdbcClient,
     //     byteVal1,byteVal2
     // );
-    // result = datetimeProcedureCall(jdbcClient,
-    //      timeStampValue,timeStampValue
-    //     ,timeStamptzValue,timeStamptzValue
-    //     ,dateValue,dateValue
-    //     ,timeValue,timeValue
-    //     // ,inter,inter
-    // );
+    result = datetimeProcedureCall(jdbcClient,
+         timeStampValue,timeStampValue
+        ,timeStamptzValue,timeStamptzValue
+        ,dateValue,dateValue
+        ,timeValue,timeValue
+        // ,inter,inter
+    );
     // result = booleanProcedureCall(jdbcClient,
     //     booleanVaue,booleanVaue
     // );

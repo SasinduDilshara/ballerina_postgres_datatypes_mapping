@@ -15,6 +15,7 @@ function proceduresCreations(jdbc:Client jdbcClient)  returns sql:ExecutionResul
     sql:ExecutionResult|sql:Error result;
 
     result = createNumericProcedures(jdbcClient);
+    result = createNumericProcedures2(jdbcClient);
     result = createMoneyProcedures(jdbcClient);
     result = createCharacterProcedures(jdbcClient);
     result = createBinaryProcedures(jdbcClient);
@@ -54,7 +55,8 @@ function proceduresCreations(jdbc:Client jdbcClient)  returns sql:ExecutionResul
 
 
 sql:SmallIntValue lowerSmallInt = new(-3276);
-// sql:SmallIntValue upperSmallInt = new(3276);
+sql:SmallIntValue lowerSmallInt2 = new(-3276);
+sql:SmallIntValue upperSmallInt2 = new(3276);
 
 sql:BigIntValue bigInt1 = new(-3276);
 sql:BigIntValue bigInt2 = new(3276);
@@ -69,7 +71,8 @@ int upperInt =  2147483647;
 // int bigInt2 = -2147483648;
 
 sql:IntegerValue lowerInt = new(-2147483648);
-// sql:IntegerValue upperInt = new(2147483647);
+sql:IntegerValue lowerInt2 = new(-2147483648);
+sql:IntegerValue upperInt2 = new(2147483647);
 
 // decimal decVal1 = 123456789.123456789;
 // decimal decVal2 = -123456789.123456789;
@@ -218,6 +221,11 @@ function proceduresCalls(jdbc:Client jdbcClient)  returns sql:ProcedureCallResul
         // ,sser1,sser2
     );
 
+    // result = numericProcedureCall2(
+    //     jdbcClient,lowerSmallInt,lowerSmallInt
+    //     ,lowerInt2,upperInt2
+    // );
+
 
 
     // result = moneyProcedureCall(jdbcClient,
@@ -277,6 +285,16 @@ function proceduresCalls(jdbc:Client jdbcClient)  returns sql:ProcedureCallResul
     result = booleanProcedureCall(jdbcClient,
         booleanVaue,booleanVaue
     );
+
+
+
+
+
+
+
+
+
+
     // result = geometricProcedureCall(jdbcClient,
     //     pointVal,pointVal
     // );
@@ -339,9 +357,9 @@ function proceduresCalls(jdbc:Client jdbcClient)  returns sql:ProcedureCallResul
 
 
 
-    // result = enumProcedureCall(jdbcClient,
-    //     enVal,enVal
-    // );
+    result = enumProcedureCall(jdbcClient,
+        enVal,enVal
+    );
 
 
 
@@ -387,6 +405,7 @@ function tearDown(jdbc:Client jdbcClient) returns sql:ExecutionResult|sql:Error{
 
 
     result = numericalTearDown(jdbcClient);
+    result = numericalTearDown2(jdbcClient);
     result = moneyTearDown(jdbcClient);
     result = CharacterTearDown(jdbcClient);
     result = binaryTearDown(jdbcClient);
@@ -410,7 +429,7 @@ function tearDown(jdbc:Client jdbcClient) returns sql:ExecutionResult|sql:Error{
     result = enumTearDown(jdbcClient);
     result = complexTearDown(jdbcClient);
 
-    result = anyTearDown(jdbcClient);
+    // result = anyTearDown(jdbcClient);
 
     return result;
 

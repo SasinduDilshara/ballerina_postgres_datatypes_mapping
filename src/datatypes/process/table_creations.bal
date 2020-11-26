@@ -419,7 +419,21 @@ function createDomainTable(jdbc:Client jdbcClient) returns int|string|sql:Error?
 
         CreateQueries createTableQuery = createQueryMaker({
             "ID": "SERIAL", 
-            "posintType":"posint"
+            "posintType":"posint",
+            "dsmallintType":"dsmallint",
+            "dbigintType":"dbigint",
+            "ddecimalType":"ddecimal",
+            "dnumericType":"dnumeric",
+            "drealType":"dreal",
+            "ddoubleType":"ddouble",
+            "dcharType":"dchar",
+            "dvarcharType":"dvarchar",
+            "dtextType":"dtext",
+            "dnameType":"dname",
+            "dbyteaType":"dbytea"
+            ,"dtstzType":"dtstz"
+            ,"dbooleanType":"dboolean"
+            // ,"dxmlType":"dxml"
         },"ID");
 
         int|string|sql:Error? initResult = initializeTable(jdbcClient, tableName , createTableQuery.createQuery);

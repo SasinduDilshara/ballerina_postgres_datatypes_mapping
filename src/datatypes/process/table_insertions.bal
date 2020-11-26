@@ -1040,33 +1040,69 @@ function insertRangeTable(jdbc:Client jdbcClient ,string int4rangeType, string i
 
 }
 
+    byte[] byteval = [1,2,3,4,5];
+
+    sql:TimestampValue timeStamptzValue2= new("2004-10-19 10:23:54");
 
 function domainTableInsertions(jdbc:Client jdbcClient) returns sql:ExecutionResult|sql:Error?{
 
     sql:ExecutionResult|sql:Error? result;
-    result = insertDomainTable(jdbcClient,
     
-        1
+
+        result = insertDomainTable(jdbcClient,
+    
+        2147483647,32767,9223372036854775807,
+        123456.123456,123456.123456,0.123456,123456654321.123,
+        "CHAR","VARCHAR","TEXT","name",
+        byteval
+        ,timeStamptzValue2
+        ,true
 
     );
-    // result = insertDomainTable(jdbcClient,
-    
-    //     "1"
 
-    // );
     return result;
 
 }
 
-function insertDomainTable(jdbc:Client jdbcClient ,string|int posintType) returns sql:ExecutionResult|sql:Error?{
+
+
+
+function insertDomainTable(jdbc:Client jdbcClient ,string|int posintType,string|int dsmallintType,string|int dbigintType
+
+,string|int|decimal ddecimalType,string|int|decimal dnumericType,string|int|float drealType,string|int|float ddoubleType
+,string dcharType,string dvarcharType,string dtextType,string dnameType
+,byte[] dbyteaType
+,sql:TimestampValue dtstzType
+,boolean dbooleanType
+) returns sql:ExecutionResult|sql:Error?{
 
             // "posintType":"posint"
+
+            // 
    sql:ParameterizedQuery insertQuery =
             `INSERT INTO domainTypes (
-                posintType
-                             ) 
+                posintType,dsmallintType,dbigintType
+                ,ddecimalType,dnumericType,drealType,ddoubleType
+                ,dcharType,dvarcharType,dtextType,dnameType,dbyteaType
+                ,dtstzType
+                ,dbooleanType
+                ) 
              VALUES (
-                ${posintType}
+                ${posintType},
+                ${dsmallintType},
+                ${dbigintType},
+                ${ddecimalType},
+                ${dnumericType},
+                ${drealType},
+                ${ddoubleType},
+                ${dcharType},
+                ${dvarcharType},
+                ${dtextType},
+                ${dnameType},
+                ${dbyteaType},
+                ${dtstzType},
+                ${dbooleanType}
+
             )`;
     
 

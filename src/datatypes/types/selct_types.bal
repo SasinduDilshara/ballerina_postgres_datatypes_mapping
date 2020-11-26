@@ -226,6 +226,19 @@ public type DomainRecord record{
     
     int ID;
     int posintType;
+    int dsmallintType;
+    int dbigintType;
+    decimal ddecimalType;
+    decimal dnumericType;
+    float drealType;
+    float ddoubleType;
+    string dcharType;
+    string dvarcharType;
+    string dtextType;
+    string dnameType;
+    string dbyteaType;
+    time:Time dtstzType;
+    boolean dbooleanType;
 };
 
 

@@ -151,6 +151,19 @@ function domainTableSelection(jdbc:Client jdbcClient, string columns = "*",strin
         io:println("\n");
         io:println(rec);
         io:println(rec.posintType);
+        io:println(rec.dsmallintType);
+        io:println(rec.dbigintType);
+        io:println(rec.ddecimalType);
+        io:println(rec.dnumericType);
+        io:println(rec.drealType);
+        io:println(rec.ddoubleType);
+        io:println(rec.dcharType);
+        io:println(rec.dvarcharType);
+        io:println(rec.dtextType);
+        io:println(rec.dnameType);
+        io:println(rec.dbyteaType);
+        io:println(rec.dtstzType);
+        io:println(rec.dbooleanType);
         io:println("\n");
     });
     

@@ -82,7 +82,7 @@ function tableSelections(jdbc:Client jdbcClient) returns sql:Error?{
 
         result = numericTableSelection(jdbcClient);
         result = moneyTableSelection(jdbcClient);
-        // result = characterTableSelection(jdbcClient);
+        result = characterTableSelection(jdbcClient);
         result = binaryTableSelection(jdbcClient);
         result = dateTimeTableSelection(jdbcClient);
         result = BooleanTableSelection(jdbcClient);

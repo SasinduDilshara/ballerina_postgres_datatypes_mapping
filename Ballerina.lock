@@ -3,25 +3,30 @@ version = "0.1.0"
 lockfile_version = "1.0.0"
 ballerina_version = "slp5"
 
-[[imports."sasindu/procedures:0.1.0"]]
-org_name = "ballerina"
-name = "io"
-version = "0.5.1"
-
-[[imports."sasindu/procedures:0.1.0"]]
-org_name = "ballerina"
-name = "java.jdbc"
-version = "0.5.1"
-
-[[imports."sasindu/procedures:0.1.0"]]
-org_name = "ballerina"
-name = "sql"
-version = "0.5.1"
-
 [[imports."ballerina/system:0.6.1"]]
 org_name = "ballerina"
 name = "io"
 version = "0.5.1"
+
+[[imports."sasindu/datatypes:0.1.0"]]
+org_name = "ballerina"
+name = "io"
+version = "0.5.1"
+
+[[imports."sasindu/datatypes:0.1.0"]]
+org_name = "ballerina"
+name = "java.jdbc"
+version = "0.5.1"
+
+[[imports."sasindu/datatypes:0.1.0"]]
+org_name = "ballerina"
+name = "sql"
+version = "0.5.1"
+
+[[imports."sasindu/datatypes:0.1.0"]]
+org_name = "ballerina"
+name = "time"
+version = "1.0.2"
 
 [[imports."ballerina/java.jdbc:0.5.1"]]
 org_name = "ballerina"

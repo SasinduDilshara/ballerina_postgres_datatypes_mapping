@@ -1,12 +1,23 @@
 
+import ballerina/time;
+import ballerina/sql;
+import ballerina/io;
+
+time:Time time = time:currentTime();
+sql:IntegerValue t = new(1);
+
+public function test(){
+    io:print("");
+}
+
 public type characterRecord record{
 
     int ID;
-    string charType;
-    string varcharType;
-    string textType;
-    string nameType;
-    string charWithoutLengthType;
+    json charType;
+    json varcharType;
+    json textType;
+    json nameType;
+    json charWithoutLengthType;
 
 };
 
@@ -70,14 +81,28 @@ public type BooleanRecord record{
 
 };
 
+public type timeR record {|
+    int time;
+    zoneR zone;
+|};
+
+public type zoneR record {|
+    int id;
+    string offset;
+|};
+public type randomType record {|
+    
+|};
+
+
 public type DateTimeRecord record{
     
     int ID;
-    string timestampType;
-    string timestamptzType;
-    string dateType;
-    string timeType;
-    string timeWithTimeZoneType;
+    time:Time timestampType;
+    time:Time timestamptzType;
+    time:Time dateType;
+    time:Time timeType;
+    time:Time timeWithTimeZoneType;
     string intervalType;
 
 };
@@ -138,26 +163,48 @@ public type ArrayRecord record{
     string integerArray2Type;
     int[5] arrayType;
     int[] array2Type;
+    boolean[] booleanArrayType;
+    int[] byteaArrayType;
+    decimal[] floatArrayType;
 };
 
+// sql:StructValue complexRecord = new(record{
+
+// })
+
+public type complexR record{|
+        float r;
+        float i;
+    |};
+
+//         int ID;
+    
+//     // string complexType;
+//     // sql:StructValue complexType;
+
+// //    record{
+// //         float r;
+// //         float i;
+// //     } complexType;
+
+//     string inventoryType;
+
+
+//     // record{|
+//     //     string name;
+//     //     int supplier_id;
+//     //     decimal price;
+//     // |} inventoryType;
 
 public type ComplexRecord record{
     
     int ID;
     
+    // complexR complexType;
     string complexType;
+
     string inventoryType;
 
-    // record{|
-    //     decimal r;
-    //     decimal i;
-    // |} complexType;
-
-    // record{|
-    //     string name;
-    //     decimal supplier_id;
-    //     decimal price;
-    // |} inventoryType;
     
 };
 

@@ -2,7 +2,164 @@ import ballerina/io;
 import ballerina/java.jdbc;
 // import ballerina/auth;
 import ballerina/sql;
-// import ballerina/time;
+import ballerina/time;
+
+
+
+time:Time time_ = time:currentTime();
+
+
+string anyProcName = "anytest";
+map<string> anyValues = {
+    // "anyInValue": "any","inout anyInOutValue":"any"
+    "anyelementInValue": "anyelement","inout anyelementInOutValue":"anyelement"
+    ,"anyarrayInValue": "anyarray","inout anyarrayInOutValue":"anyarray"
+    ,"anynonarrayInValue": "anynonarray","inout anynonarrayInOutValue":"anynonarray"
+    ,"anyenumInValue": "anyenum","inout anyenumInOutValue":"anyenum"
+    ,"anyrangeInValue": "anyrange","inout anyrangeInOutValue":"anyrange"
+    ,"recordInValue": "record","inout recordInOutValue":"record"
+};
+string anyProcParameters = createParas( anyValues);
+string dropAnyProcParameters = createDrops( anyValues);
+
+function createAnyProcedures(jdbc:Client jdbcClient) returns sql:ExecutionResult|sql:Error{
+
+    sql:ExecutionResult|sql:Error result;
+
+    string query = createQuery(
+        anyProcName,
+        anyProcParameters,
+        // "select anyInValue into anyInOutValue;"
+        "select anyelementInValue into anyelementInOutValue;"
+        +"select anyarrayInValue into anyarrayInOutValue;"
+        +"select anynonarrayInValue into anynonarrayInOutValue;"
+        +"select anyenumInValue into anyenumInOutValue;"
+        +"select anyrangeInValue into anyrangeInOutValue;"
+        +"select recordInValue into recordInOutValue;"
+        
+    );
+    io:println(query);
+    result = jdbcClient->execute(query);
+
+    if(result is sql:ExecutionResult){
+        io:println("any Procedure is initialization Success");
+        io:println(result);
+        io:println("\n");
+    }
+    else{
+        io:println("any Procedure is initialization failed");
+        io:println(result);
+        io:println("\n");
+    }
+
+
+    return result;  
+
+}
+
+function anyProcedureCall(jdbc:Client jdbcClient
+    // string anyInput,        string anyInOut,
+    ,string anyelementInput,        string anyelementInOut
+    ,sql:ArrayValue anyarrayInput,        sql:ArrayValue anyarrayInOut
+    ,string anynonarrayInput,        string anynonarrayInOut
+    ,string anyenumInput,        string anyenumInOut
+    ,string anyrangeInput,        string anyrangeInOut
+    ,string recordInput,        string recordInOut
+    )  returns sql:ProcedureCallResult|sql:Error {
+
+// ${inSmallInput} 
+// ${anyInput}
+// ,${anyInOutId}
+// ,${anyelementInput}
+// ,${anyelementInOutId}
+// ,${anyarrayInput}
+// ,${anyarrayInOutId}  
+
+    sql:ProcedureCallResult|sql:Error result;
+
+    // sql:InOutParameter anyInOutId = new (anyInOut);
+    sql:InOutParameter anyelementInOutId = new (anyelementInOut);
+    sql:InOutParameter anyarrayInOutId = new (anyarrayInOut);
+    sql:InOutParameter anynonarrayInOutId = new (anynonarrayInOut);
+    sql:InOutParameter anyenumInOutId = new (anyenumInOut);
+    sql:InOutParameter anyrangeInOutId = new (anyrangeInOut);
+    sql:InOutParameter recordInOutId = new (recordInOut);
+    
+    sql:ParameterizedCallQuery callQuery =
+            `call anytest(
+                ${anyelementInput}
+                ,${anyelementInOutId}
+                ,${anyarrayInput}
+                ,${anyarrayInOutId}
+                ,${anynonarrayInput}
+                ,${anynonarrayInOutId}
+                ,${anyenumInput}
+                ,${anyenumInOutId}
+                ,${anyrangeInput}
+                ,${anyrangeInOutId}
+                ,${recordInput}
+                ,${recordInOutId}                  
+            )`;
+    
+
+    result = jdbcClient->call(callQuery);
+
+    if (result is sql:ProcedureCallResult) {
+        io:println("\n");
+        io:println(result);
+        // io:println("any(n) value"," - ",anyInOutId.get(string));
+        io:println("anyelement value"," - ",anyelementInOutId.get(string));
+        io:println("anyarray value"," - ",anyarrayInOutId.get(string));
+        io:println("anynonarray value"," - ",anynonarrayInOutId.get(string));
+        io:println("anyenum value"," - ",anyenumInOutId.get(string));
+        io:println("anyrange value"," - ",anyrangeInOutId.get(string));
+        io:println("record value"," - ",recordInOutId.get(string));
+        io:println("any procedure successfully created");
+        io:println("\n");
+    } 
+    else{
+        io:println("\nError ocurred while creating the any procedure\n");
+        io:println(result);
+        io:println("\n");
+    }
+
+    return result;      
+
+}
+
+function anyTearDown(jdbc:Client jdbcClient) returns sql:ExecutionResult|sql:Error{
+
+    sql:ExecutionResult|sql:Error result;
+
+
+    string query = dropQuery(
+        anyProcName,
+        dropAnyProcParameters
+    );
+    io:println(query);
+    result = jdbcClient->execute(query);
+
+    if(result is sql:ExecutionResult){
+        io:println("any Procedure is drop Success");
+        io:println(result);
+        io:println("\n");
+    }
+    else{
+        io:println("any Procedure is drop failed");
+        io:println(result);
+        io:println("\n");
+    }
+
+
+    return result;  
+
+}
+
+
+
+
+
+
 
 
 
@@ -667,7 +824,7 @@ function rangeTearDown(jdbc:Client jdbcClient) returns sql:ExecutionResult|sql:E
 //.....................................................................................................................................................
 string arrayProcName = "arraytest";
 map<string> arrayValues = {
-    "arrayInValue": "bigint array","inout arrayInOutValue":"bigint array"
+    "arrayInValue": "double precision[]","inout arrayInOutValue":"double precision[]"
 };
 string arrayProcParameters = createParas( arrayValues);
 string dropArrayProcParameters = createDrops( arrayValues);
@@ -701,6 +858,10 @@ function createArrayProcedures(jdbc:Client jdbcClient) returns sql:ExecutionResu
 
 }
 
+public type arrayGet record {
+    
+};
+
 function arrayProcedureCall(jdbc:Client jdbcClient,
     sql:ArrayValue arrayInput,        sql:ArrayValue arrayInOut
     )  returns sql:ProcedureCallResult|sql:Error {
@@ -724,7 +885,8 @@ function arrayProcedureCall(jdbc:Client jdbcClient,
     if (result is sql:ProcedureCallResult) {
         io:println("\n");
         io:println(result);
-        // io:println("array value"," - ",arrayInOutId.get(sql:ArrayValue));
+        // io:println("array value"," - ",arrayInOutId.get(arrayGet));
+        io:println("array value"," - ",arrayInOutId);
         io:println("array procedure successfully created");
         io:println("\n");
     } 
@@ -961,7 +1123,7 @@ function xmlProcedureCall(jdbc:Client jdbcClient,
     if (result is sql:ProcedureCallResult) {
         io:println("\n");
         io:println(result);
-        // io:println("xml value"," - ",xmlInOutId.get(string));
+        // io:println("xml value"," - ",xmlInOutId.get(xml));
         io:println("xml procedure successfully created");
         io:println("\n");
     } 
@@ -1645,6 +1807,8 @@ function booleanProcedureCall(jdbc:Client jdbcClient,
         io:println("\n");
         io:println(result);
         io:println("boolean value"," - ",booleanInOutId.get(string));
+        io:println("boolean value"," - ",booleanInOutId.get(int));
+        io:println("boolean value"," - ",booleanInOutId.get(boolean));
         io:println("boolean procedure successfully created");
         io:println("\n");
     } 
@@ -1738,6 +1902,16 @@ function createDatetimeProcedures(jdbc:Client jdbcClient) returns sql:ExecutionR
 
 }
 
+public type timeR record {|
+    int time;
+    zoneR zone;
+|};
+
+public type zoneR record {|
+    int id;
+    string offset;
+|};
+
 function datetimeProcedureCall(jdbc:Client jdbcClient,
     sql:TimestampValue tsInput,        sql:TimestampValue tsInOut
     ,sql:TimestampValue tstzInput,     sql:TimestampValue tstzInOut
@@ -1785,11 +1959,11 @@ function datetimeProcedureCall(jdbc:Client jdbcClient,
     if (result is sql:ProcedureCallResult) {
         io:println("\n");
         io:println(result);
-        io:println("TS value"," - ",tsInOutId.get(string));
-        io:println("TSTZ value"," - ",tstzInOutId.get(string));
-        io:println("D value"," - ",dInOutId.get(string));
-        io:println("T value"," - ",tInOutId.get(string));
-        io:println("Tz value"," - ",ttzInOutId.get(string));
+        io:println("TS value"," - ",tsInOutId.get(zoneR));
+        io:println("TSTZ value"," - ",tstzInOutId.get(timeR));
+        io:println("D value"," - ",dInOutId.get(timeR));
+        io:println("T value"," - ",tInOutId.get(timeR));
+        io:println("Tz value"," - ",ttzInOutId.get(timeR));
         io:println("Binary procedure successfully created");
         io:println("\n");
     } 

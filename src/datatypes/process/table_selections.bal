@@ -2,9 +2,10 @@ import ballerina/io;
 import ballerina/java.jdbc;
 // import ballerina/auth;
 import ballerina/sql;
-// import ballerina/time;
+import ballerina/time;
 
 
+time:Time time___ = time:currentTime();
 
 
 
@@ -257,6 +258,7 @@ function complexTableSelection(jdbc:Client jdbcClient, string columns = "*",stri
     string selectionQuery = selecionQueryMaker("complexTypes",columns,condition);
 
         selectionQuery = "select complexType::text , inventoryType::text from complexTypes";
+        // selectionQuery = "select complexType , inventoryType::text from complexTypes";
         stream<record{}, error> resultStream =
         jdbcClient->query(selectionQuery, ComplexRecord);
 
@@ -305,12 +307,15 @@ function arrayTableSelection(jdbc:Client jdbcClient, string columns = "*",string
             // "integerArrayType":"int[]",
             // "integerArray2Type":"int[][]",
             // "arrayType":"int array[5]",
-            // "array2Type":"int array"
+            // "array2Type":"int array",
+            // "booleanArrayType":"boolean[]",
+            // "byteaArrayType":"bytea[]",
+            // "floatArrayType":"double precision[]"
      io:println("------ Start Query in Array table-------");
 
     string selectionQuery = selecionQueryMaker("arrayTypes",columns,condition);
 
-    selectionQuery = "select textArrayType::text, textArray2Type, integerArrayType, integerArray2Type::text,arrayType,array2Type from arrayTypes";
+    selectionQuery = "select textArrayType::text, textArray2Type, integerArrayType, integerArray2Type::text,arrayType,array2Type,booleanArrayType,byteaArrayType,floatArrayType from arrayTypes";
     // selectionQuery = "select textArrayType::text[], textArray2Type, integerArrayType, integerArray2Type::int[],arrayType,array2Type from arrayTypes";
 
 
@@ -330,6 +335,9 @@ function arrayTableSelection(jdbc:Client jdbcClient, string columns = "*",string
         io:println(rec.integerArray2Type);
         io:println(rec.arrayType);
         io:println(rec.array2Type);
+        io:println(rec.booleanArrayType);
+        io:println(rec.byteaArrayType);
+        io:println(rec.floatArrayType);
         io:println("\n");
     });
     
@@ -832,11 +840,34 @@ function dateTimeTableSelection(jdbc:Client jdbcClient, string columns = "*",str
     error? e = customerStream.forEach(function(DateTimeRecord rec) {
         io:println("\n");
         io:println(rec);
+        io:println("\n");
         io:println(rec.timestampType);
+        time:Time|error t3 = time:toTimeZone(rec.timestampType, "Asia/Colombo");
+        if (t3 is time:Time) {
+            io:println("timestampType After converting the time zone: ", time:toString(t3));
+        }
         io:println(rec.timestamptzType);
+        t3 = time:toTimeZone(rec.timestamptzType, "Asia/Colombo");
+        if (t3 is time:Time) {
+            io:println("timestamptzType After converting the time zone: ", time:toString(t3));
+        }
         io:println(rec.dateType);
+        t3 = time:toTimeZone(rec.dateType, "Asia/Colombo");
+        if (t3 is time:Time) {
+            io:println(" dateType After converting the time zone: ", time:toString(t3));
+        }
         io:println(rec.timeType);
+        t3 = time:toTimeZone(rec.timeType, "Asia/Colombo");
+        if (t3 is time:Time) {
+            io:println(" timeType After converting the time zone: ", time:toString(t3));
+        }
+        io:println(rec.timeWithTimeZoneType);
+        t3 = time:toTimeZone(rec.timeWithTimeZoneType, "Asia/Colombo");
+        if (t3 is time:Time) {
+            io:println("timeWithTimeZoneType After converting the time zone: ", time:toString(t3));
+        }
         io:println(rec.intervalType);
+        
         io:println("\n");
     });
     

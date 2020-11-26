@@ -4,7 +4,9 @@ import ballerina/io;
 import ballerina/java.jdbc;
 // import ballerina/auth;
 import ballerina/sql;
-// import ballerina/time;
+import ballerina/time;
+
+time:Time time_ = time:currentTime();
 
 
 sql:SmallIntValue smallIntValue1 = new(32768);
@@ -237,9 +239,11 @@ function binaryTableInsertions(jdbc:Client jdbcClient) returns sql:ExecutionResu
         byteArray3
 
     );
+    // io:ReadableByteChannel byteChannel = check io:openReadableFile("filePath");
+    // io:ReadableCharacterChannel characterChannel = new (byteChannel, "encoding");
     // result = insertBinaryTable(jdbcClient,
     
-    //     3
+    //     characterChannel
 
     // );
     return result;
@@ -296,11 +300,30 @@ function DateTimeTableInsertions(jdbc:Client jdbcClient) returns sql:ExecutionRe
     timeStampValue,timeStamptzValue,dateValue,timeValue,timeWithTimeZoneType,"4 Year"
 
     );
-    // result = insertDateTimeTable(jdbcClient,
     
-    //     "2004-10-19 10:23:54+02","January 8, 1999","2003-04-12 04:05:06 America/New_York","4 Month"
+    time:Time|error timeCreated = time:createTime(2017, 3, 28, 23, 42, 45,554, "Asia/Colombo");
+    if(timeCreated is time:Time){
 
-    // );
+    sql:TimestampValue timeStampValue2 = new(timeCreated);
+    sql:TimestampValue timeStamptzValue2 = new(timeCreated);
+    sql:DateValue dateValue2 = new(timeCreated);
+    sql:TimeValue timeValue2 = new(timeCreated);
+    sql:TimeValue timeWithTimeZoneType2 = new(timeCreated);
+
+
+    result = insertDateTimeTable(jdbcClient,
+    
+    timeStampValue2,timeStamptzValue2,dateValue2,timeValue2,timeWithTimeZoneType2,"4 Year"
+
+    );
+
+
+    }
+
+
+
+
+
     return result;
 
 }
@@ -839,6 +862,21 @@ function arrayTableInsertions(jdbc:Client jdbcClient) returns sql:ExecutionResul
     stringArray1d = ["1","2","3"];
     sql:ArrayValue stringArray1dValue= new (stringArray1d); 
 
+
+    boolean[] booleanArray1d;
+    booleanArray1d = [true,false];
+    sql:ArrayValue booleanArray1dValue= new (booleanArray1d); 
+
+    byte[][] binaryArray1d;
+    byte[] bv = base64 `aGVsbG8gYmFsbGVyaW5hICEhIQ==`;
+
+    binaryArray1d = [bv,bv];
+    sql:ArrayValue binaryArray1dValue= new (binaryArray1d); 
+
+    decimal[] floatArray1d;
+    floatArray1d = [1.123,3.45];
+    sql:ArrayValue floatArray1dValue= new (floatArray1d); 
+
     result = insertArrayTable(jdbcClient,
     
             
@@ -847,23 +885,31 @@ function arrayTableInsertions(jdbc:Client jdbcClient) returns sql:ExecutionResul
             intArray1dValue,
             "{{1,2},{3,4}}", 
             intArray1dValue,
-            intArray1dValue
+            intArray1dValue,
+            booleanArray1dValue,
+            intArray1dValue,
+            floatArray1dValue
     );
     return result;
 
 }
 
-function insertArrayTable(jdbc:Client jdbcClient ,string textArrayType ,sql:ArrayValue textArray2Type , sql:ArrayValue integerArrayType, string integerArray2Type, sql:ArrayValue arrayType, sql:ArrayValue array2Type) returns sql:ExecutionResult|sql:Error?{
+function insertArrayTable(jdbc:Client jdbcClient ,string textArrayType ,sql:ArrayValue textArray2Type , sql:ArrayValue integerArrayType, string integerArray2Type, sql:ArrayValue arrayType, sql:ArrayValue array2Type
+                            ,sql:ArrayValue booleanArrayType ,string|sql:ArrayValue|byte[]  byteaArrayType, sql:ArrayValue floatArrayType
+) returns sql:ExecutionResult|sql:Error?{
 
             // "textArrayType":"text[][]",
             // "textArray2Type":"text[]",
             // "integerArrayType":"int[]",
             // "integerArray2Type":"int[][]",
             // "arrayType":"int array[5]",
-            // "array2Type":"int array"
+            // "array2Type":"int array",
+            // "booleanArrayType":"boolean[]",
+            // "byteaArrayType":"bytea[]",
+            // "floatArrayType":"double precision[]"
    sql:ParameterizedQuery insertQuery =
             `INSERT INTO arrayTypes (
-                textArrayType,textArray2Type, integerArrayType,integerArray2Type, arrayType, array2Type
+                textArrayType,textArray2Type, integerArrayType,integerArray2Type, arrayType, array2Type, booleanArrayType, byteaArrayType, floatArrayType
                              ) 
              VALUES (
                 ${textArrayType}::text[][],
@@ -871,7 +917,10 @@ function insertArrayTable(jdbc:Client jdbcClient ,string textArrayType ,sql:Arra
                 ${integerArrayType},
                 ${integerArray2Type}::int[][], 
                 ${arrayType}, 
-                ${array2Type}
+                ${array2Type},
+                ${booleanArrayType},
+                ${byteaArrayType},
+                ${floatArrayType}
             )`;
     
 
@@ -899,16 +948,18 @@ function ComplexTableInsertions(jdbc:Client jdbcClient) returns sql:ExecutionRes
 
         "(1.1,2.2)","(\"Name\",2,456.32)"
     );
-    result = insertComplexTable(jdbcClient,
+    // complexR ins = {r:10,i:12};
+    // sql:StructValue insval = new(ins);
+    // result = insertComplexTable(jdbcClient,
     
 
-        "(1.1,2.2)","(\"Name\",2,456.32)"
-    );
+    //     insval,"(\"Name\",2,456.32)"
+    // );
     return result;
 
 }
 
-function insertComplexTable(jdbc:Client jdbcClient ,string complexType, string inventoryType) returns sql:ExecutionResult|sql:Error?{
+function insertComplexTable(jdbc:Client jdbcClient ,string|sql:StructValue complexType, string inventoryType) returns sql:ExecutionResult|sql:Error?{
 
             // "complexType":"complex",
             // "inventoryType":"inventory_item"

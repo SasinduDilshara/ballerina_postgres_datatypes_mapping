@@ -60,7 +60,7 @@ function createCharacterTable(jdbc:Client jdbcClient) returns int|string|sql:Err
         CreateQueries createTableQuery = createQueryMaker({
 
             "ID": "SERIAL", 
-            "charType":"char(10485760)",
+            "charType":"char(200)",
             "varcharType":"varchar(10485760)",
             "textType":"text",
             "nameType":"name",
@@ -345,7 +345,10 @@ function createArrayTable(jdbc:Client jdbcClient) returns int|string|sql:Error?{
             "integerArrayType":"int[]",
             "integerArray2Type":"int[][]",
             "arrayType":"int array[5]",
-            "array2Type":"int array"
+            "array2Type":"int array",
+            "booleanArrayType":"boolean[]",
+            "byteaArrayType":"int[]",
+            "floatArrayType":"double precision[]"
         },"ID");
 
         int|string|sql:Error? initResult = initializeTable(jdbcClient, tableName , createTableQuery.createQuery);

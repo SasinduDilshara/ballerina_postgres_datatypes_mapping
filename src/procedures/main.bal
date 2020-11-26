@@ -29,7 +29,7 @@ public function main() {
         sql:ProcedureCallResult| sql:Error callResults = proceduresCalls(jdbcClient);
         
 
-        // sql:ExecutionResult| sql:Error tearResult = tearDown(jdbcClient);
+        sql:ExecutionResult| sql:Error tearResult = tearDown(jdbcClient);
         sql:Error? e = jdbcClient.close();  
 
         if(e is sql:Error){

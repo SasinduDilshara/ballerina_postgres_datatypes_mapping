@@ -296,6 +296,13 @@ string enVal = "value1";
 
 string cplx = "(1.1,2.32)";
 
+string anyVal1 = "1";
+string anyVal2= "[1,2,3,4,5]";
+string anyVal3 = "3";
+string anyVal4 = "value1";
+string anyVal5 = "(1,4)";
+string anyVal6 = "{ID:1}";
+
 
 
 
@@ -307,12 +314,18 @@ public function functionCalls(jdbc:Client jdbcClient){
     lowerSmallInt,lowerInt,"(1,2]",decVal1,numVal1,realVal1,dpVal1
     );
 
+    _ = anyFunctionCall(jdbcClient,
+    
+    anyVal1,anyVal2,anyVal3,anyVal4,anyVal5,anyVal6
+    );
+
 }
 
 public function functionTeardowns(jdbc:Client jdbcClient){
 
 
     _ = numericalTearDown(jdbcClient);
+     _ = anyTearDown(jdbcClient);
 
 }
 
@@ -322,6 +335,7 @@ public function functionCreation(jdbc:Client jdbcClient){
 
 
     _ = createNumericFunctions(jdbcClient);
+    _ = createAnyFunctions(jdbcClient);
 
 
 
@@ -330,6 +344,234 @@ public function functionCreation(jdbc:Client jdbcClient){
 
 
 }
+
+
+
+
+
+
+
+string anyProcName = "nanytest";
+map<string> anyvalues = {
+    "anyelementInValue": "anyelement","out anyelementOutValue":"anyelement"
+    ,"anyarrayInValue":"anyarray","out anyarrayOutValue":"anyarray"
+    ,"anynonarrayInValue":"anynonarray","out anynonarrayOutValue":"anynonarray"
+    ,"anyenumVal":"anyenum","out anyenuminOut":"anyenum"
+    ,"anyrangeVal":"anyrange","out anyrangeinOut":"anyrange"
+    ,"recordVal":"record","out recordinOut":"record"
+    // ,"doublePrecisionVal":"double precision","out doublePrecisioninOut":"double precision"
+    // ,"serialVal":"serial","out smallSerialInOut":"serial"
+};
+function createAnyFunctions(jdbc:Client jdbcClient) {
+
+    sql:ExecutionResult|sql:Error result;
+
+
+    string query = createQuery(
+        anyProcName,
+        anyProcParameters,
+        "select anyelementInValue into anyelementOutValue;"
+        +"select anyarrayInValue into anyarrayOutValue;"
+        +"select anynonarrayInValue into anynonarrayOutValue;"
+        +"select anyenumVal into anyenuminOut; "
+        +"select anyrangeVal into anyrangeinOut; "
+        +"select recordVal into recordinOut; "
+        // +"select doublePrecisionVal into doublePrecisioninOut; "
+        // +"select serialVal into smallSerialInOut; "
+        
+    );
+    io:println(query);
+    result = jdbcClient->execute(query);
+
+    if(result is sql:ExecutionResult){
+        io:println("AnyTest Function is initialization Success");
+        io:println(result);
+        io:println("\n");
+    }
+    else{
+        io:println("AnyTest Function is initialization failed");
+        io:println(result);
+        io:println("\n");
+    }
+
+
+    // return result;  
+
+}
+
+public type anyFuncRecord record{
+
+    anydata anyelementOutValue;
+    // string anyarrayOutValue;
+    // string anynonarrayOutValue;
+    // string anyenumVal;
+    // string anyrangeinOut;
+    // string recordinOut;
+    // float doublePrecisioninOut;   
+    // int  smallSerialInOut;
+
+
+};
+
+
+function anyFunctionCall(jdbc:Client jdbcClient,
+    string anyelementInValue,       
+    string anyarrayInValue,             
+    string anynonarrayInValue,           
+    string anyenumVal,            
+    string anyrangeVal,         
+    string recordVal                
+    // ,any inDoublePrecisionVal
+    // ,sql:IntegerValue serial
+    )   {
+
+// ${inSmallInput},
+// ${outSmallInputId},
+// ${Inputint},
+// ${outIntId},
+// ${Inputbigint},
+// ${outbigIntId},
+// ${inDecimal},
+// ${decId},
+// ${inNumericVal},
+// ${numeId},
+// ${inReal},
+// ${realId},
+// ${inDoublePrecisionVal},
+// ${dpId},
+// ${sserial},
+// ${serialInOut}  
+
+// ${inSmallInput},
+// ${Inputint},
+// ${Inputbigint},
+// ${inDecimal},
+// ${inNumericVal},
+// ${inReal},
+// ${inDoublePrecisionVal}
+
+    sql:ProcedureCallResult|sql:Error result;
+
+    // sql:InOutParameter smallInOut = new(inSmallInput);
+
+    // sql:SmallIntOutParameter outSmallInputId = new ;
+    // sql:IntegerOutParameter outIntId = new ;
+    // sql:BigIntOutParameter outbigIntId = new ;
+    // sql:DecimalOutParameter decId = new ;
+    // sql:NumericOutParameter numeId = new ;
+    // sql:RealOutParameter realId = new ;
+    // sql:DoubleOutParameter dpId = new ;
+    // sql:InOutParameter ssId = new (serialInOut);
+
+    // ${anyelementInValue}::text,
+    //             ${anyarrayInValue}::text,
+    //             ${anynonarrayInValue}::text
+    //             ${anyenumVal}::text,
+    //             ${anyrangeVal}::text,
+    //             ${recordVal}::text
+
+    sql:ParameterizedQuery callQuery =
+            `select * from anytest(
+                ${anyelementInValue}::anyelement
+            )`;
+    
+    // result = jdbcClient->call(callQuery);
+    io:println(callQuery);
+
+
+    stream<record{}, error> | sql:Error resultStream =
+            jdbcClient->query(callQuery,anyFuncRecord);
+
+        io:println("After query");
+        io:println("resultStream",resultStream);
+// 
+        stream<anyFuncRecord, sql:Error> customerStream =
+            <stream<anyFuncRecord, sql:Error>>resultStream;
+
+        // io:println("resultStream",resultStream);
+        
+        error? e = customerStream.forEach(function(anyFuncRecord rec) {
+            io:println("\n");
+            io:println(rec.anyelementOutValue);
+            // io:println(rec.anyarrayOutValue);
+            // io:println(rec.anynonarrayOutValue);
+            // io:println(rec.anyenumVal);
+            // io:println(rec.anyrangeinOut);
+            // io:println(rec.recordinOut);
+            io:println("\n");
+        });
+        if (e is error) {
+        io:println(e);
+    }
+
+
+
+
+
+
+    // if (result is sql:ProcedureCallResult) {
+    //     io:println("\n");
+    //     io:println("CALL RESULT ",result);
+    //     io:println("SmallInt"," - ",outSmallInputId.get(int));
+    //     io:println("Int"," - ",outIntId.get(int));
+    //     io:println("BigInt"," - ",outbigIntId.get(int));
+    //     io:println("decimal"," - ",decId.get(decimal));
+    //     io:println("numeric"," - ",numeId.get(decimal));
+    //     io:println("real"," - ",realId.get(float));
+    //     io:println("double"," - ",dpId.get(float));
+    //     io:println("Numeric function successfully created");
+    //     io:println("\n");
+    // } 
+    // else{
+    //     io:println("\nError ocurred while creating the Numeric function\n");
+    //     io:println(result);
+    //     io:println("\n");
+    // }
+
+    // return result;      
+
+}
+
+
+// string numProcParameters = "smallIntInValue smallint, out smallIntOutValue smallint";
+string anyProcParameters = createParas(anyvalues);
+string anydropProcParameters = createDrops(anyvalues);
+
+function anyTearDown(jdbc:Client jdbcClient) {
+
+    sql:ExecutionResult|sql:Error result;
+
+
+    string query = dropQuery(
+        anyProcName,
+        anydropProcParameters
+    );
+    io:println(query);
+    result = jdbcClient->execute(query);
+
+    if(result is sql:ExecutionResult){
+        io:println("Any Test Function is drop Success");
+        io:println(result);
+        io:println("\n");
+    }
+    else{
+        io:println("Any Test Function is drop failed");
+        io:println(result);
+        io:println("\n");
+    }
+
+
+    // return result;  
+
+}
+
+
+
+
+
+
+
+
 
 
 string numProcName = "numerictest";
